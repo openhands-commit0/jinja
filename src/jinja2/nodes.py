@@ -16,6 +16,9 @@ _binop_to_func: t.Dict[str, t.Callable[[t.Any, t.Any], t.Any]] = {'*': operator.
 _uaop_to_func: t.Dict[str, t.Callable[[t.Any], t.Any]] = {'not': operator.not_, '+': operator.pos, '-': operator.neg}
 _cmpop_to_func: t.Dict[str, t.Callable[[t.Any, t.Any], t.Any]] = {'eq': operator.eq, 'ne': operator.ne, 'gt': operator.gt, 'gteq': operator.ge, 'lt': operator.lt, 'lteq': operator.le, 'in': lambda a, b: a in b, 'notin': lambda a, b: a not in b}
 
+def _failing_new(cls, *args, **kwargs):
+    raise TypeError('abstract %r cannot be instantiated' % cls.__name__)
+
 class Impossible(Exception):
     """Raised if the node could not perform a requested action."""
 
