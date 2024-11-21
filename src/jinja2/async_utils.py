@@ -65,3 +65,16 @@ async def auto_aiter(value: t.Any) -> t.AsyncIterator[t.Any]:
     else:
         for item in value:
             yield item
+
+async def auto_await(value: t.Any) -> t.Any:
+    """Convert a value into its awaited value if it's awaitable.
+    Otherwise return it as-is. This is useful to handle both async
+    and sync functions in the same code.
+
+    Example::
+
+        value = await auto_await(value)
+    """
+    if hasattr(value, '__await__'):
+        return await value
+    return value
