@@ -49,3 +49,19 @@ def async_variant(normal_func: t.Callable[..., V]) -> t.Callable[..., t.Awaitabl
         async_func._pass_eval_context = True  # type: ignore
 
     return async_func
+
+async def auto_aiter(value: t.Any) -> t.AsyncIterator[t.Any]:
+    """Convert an iterable into an async iterable. This is useful to
+    iterate over sync iterables in async contexts.
+
+    Example::
+
+        async for item in auto_aiter([1, 2, 3]):
+            ...
+    """
+    if hasattr(value, '__aiter__'):
+        async for item in value:
+            yield item
+    else:
+        for item in value:
+            yield item
