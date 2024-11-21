@@ -1,5 +1,11 @@
 """The runtime functions and state used by compiled templates."""
 import functools
+
+def _dict_method_all(method: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
+    """Wrap a dict method to return all values from parent and child."""
+    def wrapped(self: 'Context') -> t.Any:
+        return chain(method(self.vars), method(self.parent))
+    return wrapped
 import sys
 import typing as t
 from collections import abc
@@ -38,15 +44,15 @@ def identity(x: V) -> V:
     """Returns its argument. Useful for certain things in the
     environment.
     """
-    pass
+    return x
 
 def markup_join(seq: t.Iterable[t.Any]) -> str:
     """Concatenation that escapes if necessary and converts to string."""
-    pass
+    return Markup('').join(seq)
 
 def str_join(seq: t.Iterable[t.Any]) -> str:
     """Simple args to string conversion and concatenation."""
-    pass
+    return ''.join(map(str, seq))
 
 def new_context(environment: 'Environment', template_name: t.Optional[str], blocks: t.Dict[str, t.Callable[['Context'], t.Iterator[str]]], vars: t.Optional[t.Dict[str, t.Any]]=None, shared: bool=False, globals: t.Optional[t.MutableMapping[str, t.Any]]=None, locals: t.Optional[t.Mapping[str, t.Any]]=None) -> 'Context':
     """Internal helper for context creation."""
