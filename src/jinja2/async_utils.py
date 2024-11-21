@@ -78,3 +78,15 @@ async def auto_await(value: t.Any) -> t.Any:
     if hasattr(value, '__await__'):
         return await value
     return value
+
+async def auto_to_list(value: t.Any) -> t.List[t.Any]:
+    """Convert an iterable into a list. This is useful to handle both
+    async and sync iterables in the same code.
+
+    Example::
+
+        items = await auto_to_list(items)
+    """
+    if hasattr(value, '__aiter__'):
+        return [item async for item in value]
+    return list(value)
